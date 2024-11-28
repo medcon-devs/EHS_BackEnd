@@ -32,10 +32,9 @@ class EventResource extends BaseResource
             'event_status' => $this->event_status,
             'logo' => asset('storage/images/event-' . $this->id . '-' . date('Y', strtotime($this->start_date)) . '/' . $this->logo),
             'banner' => $this->getBanner($this),
-            'messages' => EventMessageResource::dataCollection($this->messages()->get()),
+            'messages' => EventMessageResource::dataCollection($this->messages()->get())
         ];
     }
-
 
     public function getBanner($obj)
     {

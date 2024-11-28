@@ -22,14 +22,15 @@ class UserFacade extends BaseFacade implements UserInterface
     {
         $this->setModel(User::class);
         $this->setColumns([
-            "name", "email", "hospital", "bayanati_number", "speciality", "code_id"
+            "name", "email","member_type","phone","jobTitle","department","hospital", "bayanati_number", "speciality", "code_id"
+
         ]);
         $this->setRules([
             "name" => _RuleHelper::_Rule_Require,
             "email" => _RuleHelper::_Rule_Require . "|" . _RuleHelper::_Rule_Email,
             "hospital" => _RuleHelper::_Rule_Require,
             "speciality" => _RuleHelper::_Rule_Require,
-            "code" => _RuleHelper::_Rule_Require,
+            
         ]);
         $this->setWhere([]);
         $this->setHash(true);
@@ -42,23 +43,46 @@ class UserFacade extends BaseFacade implements UserInterface
     function store(Request $request)
     {
         $request->validate($this->getRules());
-        $code = $this->getCode($request->input('code'));
-        if (!$code) {
-            throw new Exception("Registration code is not exist");
-        }
-        $user = $this->checkCodeDuplicate($code);
-        if ($user) {
-            throw new Exception("Registration code is already taken");
-        }
-
-        return User::query()->create([
+        $columns=[
             'name' => $request->input('name'),
             'email' => $request->input('email'),
+            'member_type' => $request->input('member_type'),
+            'phone' => $request->input('phone'),
+            'jobTitle' => $request->input('jobTitle'),
+            'department' => $request->input('department'),
             'hospital' => $request->input('hospital'),
             'bayanati_number' => $request->input('bayanati_number'),
             'speciality' => $request->input('speciality'),
-            'code_id' => $code->id,
-        ]);
+        ];
+        Log::error($request->input('member_type'));
+        Log::error($request->input('code'));
+        Log::error($request->input('code')=="");
+        if($request->input('member_type')=="EHS Staff"){
+            
+            if($request->input('code')=="") {
+                throw new Exception("Registration code is not exist");
+    
+            }
+        }
+        if($request->has('code') && !empty($request->input('code'))) {
+            $code = $this->getCode($request->input('code'));
+            if (!$code) {
+                throw new Exception("Registration code is not exist");
+            }
+            $user = $this->checkCodeDuplicate($code);
+            if ($user) {
+                throw new Exception("Registration code is already taken");
+            }
+            // $columns=[
+            //     ...$columns,
+            //     'code_id' => $code->id,
+            // ];
+            $columns = array_merge($columns, ['code_id' => $code->id]);
+
+        }
+       
+
+        return User::query()->create($columns);
     }
 
     function getCode($code): Model|Builder|null

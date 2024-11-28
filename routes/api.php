@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\User\AgendaController;
+use App\Http\Controllers\User\PreconferenceController;
 use App\Http\Controllers\User\EventController;
 use App\Http\Controllers\User\FacultyController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\UserWorkshopsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +23,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'user'], function () {
+        Route::get('export', [UserController::class, 'exportCSV']);
+        Route::get('export-workshop', [UserController::class, 'exportWorkshopCSV']);
 
         Route::group(['prefix' => 'account'], function () {
             Route::post('profile', [UserController::class, 'profile']);
@@ -38,6 +42,15 @@ Route::group(['prefix' => 'v1'], function () {
         });
         Route::group(['prefix' => 'agenda'], function () {
             Route::get('/', [AgendaController::class, 'index']);
+            Route::get('/pre_confrence', [AgendaController::class, 'preconfindex']);
+        });
+        Route::group(['prefix' => 'preconference'], function () {
+            // Route::post('workshops', [PreconferenceController::class, 'registerWorkshop']);
+            Route::post('workshops', [UserWorkshopsController::class, 'store']);
+            // fetch the user's current bookings if any
+            Route::get('workshops', [UserWorkshopsController::class, 'index']);
+            Route::put('workshops', [UserWorkshopsController::class, 'update']);	
+
         });
         Route::group(['prefix' => 'faculty'], function () {
             Route::get('/', [FacultyController::class, 'index']);

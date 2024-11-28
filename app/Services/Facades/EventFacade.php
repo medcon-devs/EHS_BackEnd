@@ -29,11 +29,6 @@ class EventFacade extends BaseFacade implements EventInterface
         $this->setOrderBy("asc");
     }
 
-    public function sponsers(Request $request)
-    {
-
-    }
-
     public function gallery(Request $request)
     {
         return $this->getBuilder([

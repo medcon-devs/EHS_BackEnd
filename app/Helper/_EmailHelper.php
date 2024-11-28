@@ -24,21 +24,26 @@ class _EmailHelper
             $mail = new PHPMailer(true);
             // SMTP configurations
             $mail->isSMTP();
-            $mail->Host = 'xxxx';
+            $mail->Host = 'smtp.dreamhost.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'xxxx';
-            $mail->Password = 'xxxx';
+            $mail->SMTPAutoTLS = true;
+            $mail->Username = 'info@event.medcon.ae';
+            $mail->Password = 'xnCNzMj92^LT';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port = 465;
-            $mail->setFrom('xxxx.com', 'xxxx');          //This is the email your form sends From
+            $mail->setFrom('info@event.medcon.ae', 'The 2nd EHS Diabetes Conference');          //This is the email your form sends From
+            $mail->Sender = "info@event.medcon.ae";
             $mail->ContentType = "text/html;charset=UTF-8\r\n";
+            $mail->addAddress("info@medcon-me.com", "The 2nd EHS Diabetes Conference");
+
+            $mail->CharSet = 'UTF-8';
             $mail->Priority = 3;
             $mail->addCustomHeader("MIME-Version: 1.0\r\n");
             $mail->addCustomHeader("X-Mailer: PHP'" . phpversion() . "'\r\n");
             $mail->addAddress($user->email, $user->name);
-            $mail->Subject = 'xxxx - ' . $subject;
+            $mail->Subject = 'The 2nd EHS Diabetes Conference - ' . $subject;
 
-            $mail->isHTML();
+            $mail->isHTML(true);
             // Email body content
             $mail->Body = view($view, $data)->render();
             // Send email
@@ -57,19 +62,20 @@ class _EmailHelper
             $mail = new PHPMailer();
             // SMTP configurations
             $mail->isSMTP();
-            $mail->Host = 'xxxx';
+            $mail->Host = 'smtp.dreamhost.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'xxxx';
-            $mail->Password = 'xxxx';
+            $mail->Username = 'info@ehs-diabetes-conference.com';
+            $mail->Password = 'hm&a7Rx4YdZt';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port = 465;
-            $mail->setFrom('xxxx', 'xxxx');          //This is the email your form sends From
+            $mail->setFrom('info@ehs-diabetes-conference.com', 'The EHS Diabetes Conference');          //This is the email your form sends From
             $mail->ContentType = "text/html;charset=UTF-8\r\n";
+            $mail->CharSet = 'UTF-8';
             $mail->Priority = 3;
             $mail->addCustomHeader("MIME-Version: 1.0\r\n");
             $mail->addCustomHeader("X-Mailer: PHP'" . phpversion() . "'\r\n");
-            $mail->addAddress("xxxx", "xxxx");
-            $mail->Subject = 'xxxx - ' . $subject;
+            $mail->addAddress("info@medcon-me.com", "EHS Diabetes Conference 2024");
+            $mail->Subject = 'EHS Diabetes Conference 2024 - ' . $subject;
 
             $mail->isHTML(true);
             // Email body content

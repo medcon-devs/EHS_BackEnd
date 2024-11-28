@@ -17,7 +17,8 @@ class SponsorResource extends BaseResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'logo' => asset('storage/images/event-' . $this->event->id . '-' . date('Y', strtotime($this->event->end_date)) . '/sponsors/' . $this->logo)
+            'logo' => asset('storage/images/event-' . $this->event->id . '-' . date('Y', strtotime($this->event->end_date)) . '/sponsors/' . $this->logo),
+            'url' => asset('storage/images/event-' . $this->event->id . '-' . date('Y', strtotime($this->event->end_date)) . '/sponsors/' . $this->logo)
         ];
     }
 }

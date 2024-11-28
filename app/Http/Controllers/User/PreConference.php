@@ -3,29 +3,28 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AgendaResource;
+use App\Http\Resources\PreConferenceResource;
 use App\Http\Resources\BaseResource;
-use App\Http\Resources\PreConferenceResocurce;
-use App\Services\Interfaces\AgendaDetailsInterface;
-use App\Services\Interfaces\AgendaInterface;
+use App\Services\Interfaces\PreConferenceDetailsInterface;
+use App\Services\Interfaces\PreConferenceInterface;
 use App\Services\Interfaces\EventInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AgendaController extends Controller
+class PreConferenceController extends Controller
 {
-    private AgendaInterface $agenda;
-    private AgendaDetailsInterface $details;
+    private PreConferenceInterface $agenda;
+    private PreConferenceDetailsInterface $details;
     private EventInterface $event;
 
     /**
-     * @param AgendaInterface $agenda
-     * @param AgendaDetailsInterface $details
+     * @param PreConferenceInterface $agenda
+     * @param PreConferenceDetailsInterface $details
      * @param EventInterface $event
      */
-    public function __construct(AgendaInterface $agenda, AgendaDetailsInterface $details, EventInterface $event)
+    public function __construct(PreConferenceInterface $agenda, PreConferenceDetailsInterface $details, EventInterface $event)
     {
         $this->agenda = $agenda;
         $this->details = $details;
@@ -43,46 +42,22 @@ class AgendaController extends Controller
                 $res = $this->agenda->getListByColumns([
                     'event_id' => $event->id
                 ]);
-                return AgendaResource::collection($res);
+                return PreConferenceResource::collection($res);
             }
-            return AgendaResource::collection([]);
-        } catch (Exception $exception) {
-            return BaseResource::return($exception->getMessage());
-        }
-    }
-    public function preconfindex(Request $request)
-    {
-        try {
-            $event = $this->event->getOneByColumns([
-                'event_status' => true
-            ]);
-            // if ($event) {
-            //     $res = $this->agenda->getListByColumns([
-            //         'event_id' => $event->id
-            //     ]);
-            //     return PreConferenceResocurce::collection($res);
-            // }
-            if ($event) {
-                $ids = $this->agenda->getBuilder([
-                    'event_id' => $event->id
-                ])->select('id')->get()->pluck('id');
-                $res = $this->details->getBuilder(['agenda_type'=> true])->whereIn('agenda_id',$ids)->get();
-                return PreConferenceResocurce::collection($res);
-            }
-            return PreConferenceResocurce::collection([]);
+            return PreConferenceResource::collection([]);
         } catch (Exception $exception) {
             return BaseResource::return($exception->getMessage());
         }
     }
 
-    public function store(Request $request): JsonResponse|AgendaResource
+    public function store(Request $request): JsonResponse|PreConferenceResource
     {
         try {
             DB::beginTransaction();
             $agenda = $this->agenda->store($request);
             if ($agenda) {
                 DB::commit();
-                return AgendaResource::create($agenda);
+                return PreConferenceResource::create($agenda);
             }
             DB::rollBack();
             return BaseResource::return();
@@ -91,7 +66,7 @@ class AgendaController extends Controller
         }
     }
 
-    public function storeDetails(Request $request, $id): JsonResponse|AgendaResource
+    public function storeDetails(Request $request, $id): JsonResponse|PreConferenceResource
     {
         try {
             DB::beginTransaction();
@@ -102,7 +77,7 @@ class AgendaController extends Controller
                 $details = $this->details->add($request, $agenda->id);
                 if ($details) {
                     DB::commit();
-                    return AgendaResource::create($agenda);
+                    return PreConferenceResource::create($agenda);
                 }
             }
             DB::rollBack();
@@ -112,14 +87,14 @@ class AgendaController extends Controller
         }
     }
 
-    public function update(Request $request, $id): JsonResponse|AgendaResource
+    public function update(Request $request, $id): JsonResponse|PreConferenceResource
     {
         try {
             DB::beginTransaction();
             $agenda = $this->agenda->update($request, $id);
             if ($agenda) {
                 DB::commit();
-                return AgendaResource::create($agenda);
+                return PreConferenceResource::create($agenda);
             }
             DB::rollBack();
             return BaseResource::return();
@@ -128,14 +103,14 @@ class AgendaController extends Controller
         }
     }
 
-    public function updateDetails(Request $request, $id): JsonResponse|AgendaResource
+    public function updateDetails(Request $request, $id): JsonResponse|PreConferenceResource
     {
         try {
             DB::beginTransaction();
             $details = $this->details->update($request, $id);
             if ($details) {
                 DB::commit();
-                return AgendaResource::create($details->agenda);
+                return PreConferenceResource::create($details->agenda);
             }
             DB::rollBack();
             return BaseResource::return();

@@ -36,7 +36,7 @@ class FacultyController extends Controller
             if ($event) {
                 $res = $event->faculties()->where([
                     'vip' => false
-                ])->get();
+                ])->orderBy('order','asc')->get();
                 return FacultyResource::collection($res);
             }
             return FacultyResource::collection([]);
@@ -54,7 +54,7 @@ class FacultyController extends Controller
             if ($event) {
                 $res = $event->faculties()->where([
                     'vip' => true
-                ])->get();
+                ])->orderBy('order','asc')->get();
                 return FacultyResource::collection($res);
             }
             return FacultyResource::collection([]);

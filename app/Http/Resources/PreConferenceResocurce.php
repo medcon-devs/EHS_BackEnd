@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JsonSerializable;
 
-class AgendaResource extends BaseResource
+class PreConferenceResocurce extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -19,16 +19,24 @@ class AgendaResource extends BaseResource
      */
     public function toArray($request)
     {
+        // return [
+        //     'id' => $this->id,
+        //     'agenda_date' => $this->agenda_date,
+        //     'details' => $this->getDetails($this)
+        // ];
         return [
             'id' => $this->id,
-            'agenda_date' => $this->agenda_date,
-            'details' => $this->getDetails($this)
+                'agenda_time' => $this->agenda_time,
+                'type' => $this->type,
+                'title' => $this->title,
+                'subtitle' => $this->subtitle,
+                'colored' => $this->colored,
         ];
     }
 
     function getDetails($obj): array
     {
-        $details = $obj->details()->where(['agenda_type'=> false])->orderBy(DB::raw('CAST(`order` AS SIGNED)'), 'asc')->get();
+        $details = $obj->details()->where(['agenda_type'=> true])->orderBy(DB::raw('CAST(`order` AS SIGNED)'), 'asc')->get();
         $res = [];
         foreach ($details as $item) {
             $res[$item->agenda_time][] = [
