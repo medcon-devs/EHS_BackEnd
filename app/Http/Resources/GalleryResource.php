@@ -18,19 +18,26 @@ class GalleryResource extends BaseResource
             'id' => $this->id,
             'title' => $this->name,
             'logo' => asset('storage/images/event-' . $this->id . '-' . date('Y', strtotime($this->start_date)) . '/' . $this->logo),
-            'images' => $this->gallery($this)
-
+            'images1' => $this->gallery($this, 'event-2-2023'),
+            'images2' => $this->gallery($this, 'event-1-2024'),
         ];
     }
 
-    public function gallery($obj): array
+    /**
+     * Get gallery images based on folder year.
+     *
+     * @param $obj
+     * @param string $yearFolder
+     * @return array
+     */
+    public function gallery($obj, string $yearFolder): array
     {
         $images = $obj->galleries()->get();
         $list = [];
         foreach ($images as $image) {
             $list[] = [
                 'id' => $image->id,
-                'url' => asset('storage/images/event-' . $obj->id . '-' . date('Y', strtotime($obj->start_date)) . '/gallery/' . $image->url)
+                'url' => asset('storage/images/' . $yearFolder . '/gallery/' . $image->url)
             ];
         }
         return $list;

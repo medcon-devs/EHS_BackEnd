@@ -30,6 +30,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('profile', [UserController::class, 'profile']);
             Route::post('login', [UserController::class, 'login']);
             Route::post('register', [UserController::class, 'store']);
+            Route::get('/users', [UserController::class, 'getAllUsers']);
         });
         Route::post('contact-us', [UserController::class, 'contact']);
         Route::group(['prefix' => 'event'], function () {

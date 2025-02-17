@@ -188,4 +188,37 @@ class UserController extends Controller
             return BaseResource::return($exception->getMessage());
         }
     }
+
+    public function getAllUsers(): JsonResponse
+{
+    try {
+        // Fetch all users
+        $users = User::all(); // Retrieves all records from the `users` table
+
+        // Check if users are present
+        if ($users->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No users found',
+                'data' => []
+            ], 404);
+        }
+
+        // Return users as JSON response
+        return response()->json([
+            'success' => true,
+            'message' => 'Users retrieved successfully',
+            'data' => $users
+        ], 200);
+
+    } catch (Exception $exception) {
+        // Handle any exceptions
+        Log::error('Error retrieving users: ' . $exception->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while retrieving users',
+            'error' => $exception->getMessage()
+        ], 500);
+    }
+}
 }
